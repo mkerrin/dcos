@@ -613,7 +613,13 @@ def make_installer_docker(variant, bootstrap_id, installer_bootstrap_id):
             subprocess.check_call(['mkdir', '-p', dest_path('gen_extra')])
 
         print("Building docker container in " + build_dir)
-        subprocess.check_call(['docker', 'build', '-t', docker_image_name, build_dir])
+        subprocess.check_call(['docker', 'build',
+                               '--build-arg', 'http_proxy=%s' % os.environ.get("http_proxy"),
+                               '--build-arg', 'https_proxy=%s' % os.environ.get("https_proxy"),
+                               '--build-arg', 'HTTP_PROXY=%s' % os.environ.get("http_proxy"),
+                               '--build-arg', 'HTTPS_PROXY=%s' % os.environ.get("https_proxy"),
+                               '--build-arg', 'no_proxy=%s' % os.environ.get("no_proxy"),
+                               '-t', docker_image_name, build_dir])
 
         print("Building", installer_filename)
         pkgpanda.util.write_string(
@@ -647,6 +653,8 @@ def do_create(tag, build_name, reproducible_artifact_path, commit, variant_argum
 
     # TODO(cmaloney): Build installers in parallel.
     # Variants are sorted for stable ordering.
+    import pdb
+    # pdb.set_trace()
     for variant, bootstrap_info in sorted(variant_arguments.items(), key=lambda kv: pkgpanda.util.variant_str(kv[0])):
         print("Building installer for variant:", pkgpanda.util.variant_name(variant))
         bootstrap_installer_name = '{}installer'.format(pkgpanda.util.variant_prefix(variant))

@@ -1,14 +1,21 @@
 #!/bin/bash
 
+set -x
+
 cd "/pkg/src/dcos-ui"
 
-npm install -g npm@3.9.1
+run_npm() {
+    local extra="--proxy http://web-proxy.europe.hp.com:8080"
+    npm $extra $*
+}
 
-npm install
+run_npm install -g npm@3.9.1
+
+run_npm install
 
 echo "module.exports = {};" > ./src/js/config/Config.dev.js
-npm run scaffold
+run_npm run scaffold
 
-npm run build
+run_npm run build
 
 cp -r dist/ "$PKG_PATH"/usr

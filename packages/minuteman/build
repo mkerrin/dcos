@@ -3,7 +3,23 @@ set -x
 
 source /opt/mesosphere/environment
 
+export DEBUG=1
+
+cat <<EOF | tee $HOME/.gitconfig
+[http]
+  proxy = http://web-proxy.europe.hp.com:8080
+[https]
+  proxy = http://web-proxy.europe.hp.com:8080
+EOF
+
 pushd /pkg/src/minuteman
+
+env
+
+which escript
+
+# ./rebar3 update
+
 make rel
 popd
 

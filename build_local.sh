@@ -36,5 +36,7 @@ python3 -m venv /tmp/dcos_build_venv
 # Install the DC/OS tools
 ./prep_local
 
+which release
+
 # Build a release of DC/OS
 release create `whoami` local_build

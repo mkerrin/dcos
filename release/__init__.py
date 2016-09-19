@@ -11,6 +11,7 @@ import copy
 import importlib
 import inspect
 import json
+import os
 import os.path
 import subprocess
 import sys
@@ -444,9 +445,17 @@ def do_build_docker(name, path):
         pulled = False
 
     if not pulled:
-        print("Pull failed, building instead:", container_name)
+        print("Pull failed, building instead:", container_name, path)
         # Pull failed, build it
-        subprocess.check_call(['docker', 'build', '-t', container_name, path])
+        
+        subprocess.check_call([
+            'docker', 'build',
+            '--build-arg', 'http_proxy=%s' % os.environ.get("http_proxy"),
+            '--build-arg', 'https_proxy=%s' % os.environ.get("https_proxy"),
+            '--build-arg', 'HTTP_PROXY=%s' % os.environ.get("http_proxy"),
+            '--build-arg', 'HTTPS_PROXY=%s' % os.environ.get("https_proxy"),
+            '--build-arg', 'no_proxy=%s' % os.environ.get("no_proxy"),
+            '-t', container_name, path])
 
         # TODO(cmaloney): Push the built docker image on successful package build to both
         # 1) commit-<commit_id>
@@ -715,6 +724,8 @@ class ReleaseManager():
         return metadata
 
     def create(self, repository_path, channel, tag):
+        import pdb
+        # pdb.set_trace()
         assert len(channel) > 0  # channel must be a non-empty string.
 
         assert ('options' in self.__config) and \
@@ -804,6 +815,9 @@ def main():
         parser.print_help()
         print("ERROR: Must use a subcommand")
         sys.exit(1)
+
+    import pdb
+    # pdb.set_trace()
 
     try:
         # TODO(cmaloney): HACK. This is so we can get to the config for aws

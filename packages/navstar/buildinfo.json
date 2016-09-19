@@ -2,10 +2,8 @@
   "requires": ["openssl", "ncurses", "erlang", "libsodium"],
   "sources": {
     "navstar": {
-      "kind": "git",
-      "git": "https://github.com/dcos/navstar.git",
-      "ref": "da5e2820703bd05c2adbb8148f68257b67ffd448",
-      "ref_origin": "master"
+      "kind": "git_local",
+      "rel_path": "../../../navstar/"
     }
   }
 }

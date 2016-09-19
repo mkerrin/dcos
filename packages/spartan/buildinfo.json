@@ -2,10 +2,8 @@
   "requires": ["openssl", "ncurses", "erlang", "toybox"],
   "sources": {
     "spartan": {
-      "kind": "git",
-      "git": "https://github.com/dcos/spartan.git",
-      "ref": "1916ef8124d3355e1fe33a27559ef86d287258ac",
-      "ref_origin": "master"
+      "kind": "git_local",
+      "rel_path": "../../../spartan/"
     }
   }
 }

@@ -7,9 +7,21 @@ export CFLAGS="-I/opt/mesosphere/include -I/opt/mesosphere/active/libsodium/incl
 export LDFLAGS="-L/opt/mesosphere/lib -L/opt/mesosphere/active/libsodium/lib -Wl,-rpath=/opt/mesosphere/active/libsodium/lib"
 export CXXFLAGS=CFLAGS
 
+export DEBUG=1
+
+cat <<EOF | tee $HOME/.gitconfig
+[http]
+  proxy = http://web-proxy.europe.hp.com:8080
+[https]
+  proxy = http://web-proxy.europe.hp.com:8080
+EOF
+
+env
 
 pushd /pkg/src/navstar
-./rebar3 update
+./rebar3 --help
+./rebar3 --version
+# ./rebar3 update
 make rel
 popd
 

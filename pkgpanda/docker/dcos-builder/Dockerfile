@@ -1,6 +1,12 @@
 FROM ubuntu:14.04.4
 MAINTAINER help@dcos.io
 
+ENV http_proxy http://web-proxy.europe.hp.com:8080/
+ENV https_proxy http://web-proxy.europe.hp.com:8080/
+
+RUN echo $http_proxy
+RUN echo $HTTP_PROXY
+
 RUN apt-get -qq update && apt-get -y install \
   autoconf \
   automake \

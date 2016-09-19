@@ -1124,6 +1124,8 @@ def build(package_store, name, variant, clean_after_build, recursive=False):
     rewrite_symlinks(install_dir, repository.path, "/opt/mesosphere/packages/")
 
     print("Building package in docker")
+    import pdb
+    # pdb.set_trace()
 
     # TODO(cmaloney): Run as a specific non-root user, make it possible
     # for non-root to cleanup afterwards.
@@ -1160,7 +1162,12 @@ def build(package_store, name, variant, clean_after_build, recursive=False):
         "PKG_NAME": name,
         "PKG_ID": pkg_id,
         "PKG_PATH": "/opt/mesosphere/packages/{}".format(pkg_id),
-        "PKG_VARIANT": variant if variant is not None else "<default>"
+        "PKG_VARIANT": variant if variant is not None else "<default>",
+        "http_proxy": os.environ.get("http_proxy"),
+        "https_proxy": os.environ.get("https_proxy"),
+        "HTTP_PROXY": os.environ.get("HTTP_PROXY"),
+        "HTTPS_PROXY": os.environ.get("HTTPS_PROXY"),
+        "no_proxy": os.environ.get("no_proxy"),
     }
 
     try:
@@ -1169,6 +1176,7 @@ def build(package_store, name, variant, clean_after_build, recursive=False):
         # ownership of /opt/mesosphere/packages/{pkg_id} post build.
         cmd.run("package-builder", [
             "/bin/bash",
+            "-x",
             "-o", "nounset",
             "-o", "pipefail",
             "-o", "errexit",
